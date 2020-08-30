@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = [
-    {id: 1, title: 'kok', content: 'asdf'},
-    {id: 2, title: 'test', content: 'rtetaer'},
+    {id: 1, title: 'Terminal 1', content: 'Hello'},
 ];
 export const tabsSlice = createSlice({
     name: 'tabs',
@@ -10,12 +9,15 @@ export const tabsSlice = createSlice({
     reducers: {
         tabAdded(state, action) {
             state.push(action.payload)
+        },
+        tabRemoved(state, action) {
+            state.splice(state.findIndex(tab => tab.id === action.payload), 1);
         }
     },
 });
 
 
 export const selectTabs = state => state.tabs;
-export const { tabAdded } = tabsSlice.actions;
+export const { tabAdded, tabRemoved } = tabsSlice.actions;
 
 export default tabsSlice.reducer;

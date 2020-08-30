@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import './console.sass'
 import Tab from "../tab/Tab";
 import { useSelector, useDispatch } from 'react-redux'
+import { selectTabs } from '../tab/tabsSlice'
 
 export const TabsList = () => {
-    const tabs = useSelector(state => state.tabs);
-    const renderedTabs = tabs.map(tab => (
-        <Tab tab={tab} key={tab.id}/>
+    const tabs = useSelector(selectTabs);
+    const renderedTabs = tabs.map((tab, index) => (
+        <Tab tab={tab} key={index}/>
     ));
     return (renderedTabs);
 }
@@ -35,7 +36,6 @@ export default class Console extends React.Component {
                 <button className="console__btn console__btn--close"></button>
                 <button className="console__btn console__btn--min"></button>
                 <button className="console__btn console__btn--max"></button>
-                {pane}
             </div>
             <div className="console__tabs">
                 <TabsList />
