@@ -35,6 +35,12 @@ import Console from "./features/console/Console";
 // const currentValue = selectCounterValue(store.getState())
 // console.log(currentValue)
 
+
+
+store.subscribe(()=>{
+    localStorage.setItem('reduxState', JSON.stringify(store.getState()))
+})
+
 class Terminal extends React.Component {
     constructor(props) {
         super(props);

@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
+import React from "react";
+import {useDispatch, useSelector} from 'react-redux';
 
 import './tab.sass'
 
-import { ReactComponent as CancelIcon} from '../../asstes/svg/cancel.svg';
-import { ReactComponent as SettingsIcon} from '../../asstes/svg/gear.svg';
-import { ReactComponent as AddIcon} from '../../asstes/svg/add.svg';
+import {ReactComponent as CancelIcon} from '../../asstes/svg/cancel.svg';
+import {ReactComponent as SettingsIcon} from '../../asstes/svg/gear.svg';
+import {ReactComponent as AddIcon} from '../../asstes/svg/add.svg';
 
-import { tabAdded, tabRemoved, selectTabs } from './tabsSlice'
+import {selectTabs, tabAdded, tabRemoved} from './tabsSlice'
+
+import Pane from '../pane/Pane';
 
 export const TabsAdd = () => {
     const tabs = useSelector(selectTabs);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const onAddTabClicked = () => {
         const id = tabs.length + 1;
@@ -20,7 +21,7 @@ export const TabsAdd = () => {
             tabAdded({
                 id,
                 title: 'Terminal ' + id,
-                content: 'Hello'
+                content: 'alexei@iMacALexeiCern %'
             })
         )
     };
@@ -33,7 +34,7 @@ export const TabsAdd = () => {
 
 };
 export const TabsRemove = (props) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const onRemoveTabClicked = () => {
         dispatch(
@@ -43,7 +44,7 @@ export const TabsRemove = (props) => {
 
     return (
         <button type="button" className="tab__btn tab__btn--close" onClick={onRemoveTabClicked}>
-            <CancelIcon className='tab__icon tab__icon--close'/>
+            <CancelIcon className="tab__icon tab__icon--close"/>
         </button>
     )
 
@@ -56,13 +57,11 @@ export default class Tab extends React.Component {
         };
 
     }
+
     render() {
-        const tab = this.props.tab
+        const tab = this.props.tab;
         return <div className="tab">
             <div className="tab__bar">
-                {/*<button className='tab__btn'>*/}
-                {/*    <CancelIcon className='tab__icon tab__icon--close'/>*/}
-                {/*</button>*/}
                 <TabsRemove id={tab.id}/>
                 <span className='tab__title'>{tab.title}</span>
                 <button className='tab__btn tab__btn--settings'>
@@ -73,6 +72,7 @@ export default class Tab extends React.Component {
             <div className="tab__pane">
                 Last login Alexei: {this.state.date.toLocaleTimeString()} <br/>
                 {tab.content}
+                <Pane tabId={tab.id}/>
             </div>
         </div>;
     }
