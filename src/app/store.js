@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import consoleReducer from '../features/console/consoleSlice';
+import tabsReducer from '../features/tab/tabsSlice';
 
 export default configureStore({
   reducer: {
-    console: consoleReducer,
+    tabs: tabsReducer,
   },
 });
