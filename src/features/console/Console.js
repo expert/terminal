@@ -5,10 +5,11 @@ import Tab from "../tab/Tab";
 import { useSelector, useDispatch } from 'react-redux'
 import { selectTabs } from '../tab/tabsSlice'
 
-export const TabsList = () => {
+export const TabsList = (props) => {
     const tabs = useSelector(selectTabs);
+    const socket = props.socket;
     const renderedTabs = tabs.map((tab, index) => (
-        <Tab tab={tab} key={index}/>
+        <Tab tab={tab} key={index} socket={socket}/>
     ));
     return (renderedTabs);
 }
@@ -20,13 +21,6 @@ export default class Console extends React.Component {
             date: new Date(),
             pane: 0
         };
-        this.addPane = this.addPane.bind(this);
-    }
-
-    addPane() {
-        this.setState(state => ({
-            pane: state.pane + 1
-        }))
     }
 
     render() {
@@ -38,7 +32,7 @@ export default class Console extends React.Component {
                 <button className="console__btn console__btn--max"></button>
             </div>
             <div className="console__tabs">
-                <TabsList />
+                <TabsList socket={this.props.socket} />
             </div>
         </div>;
     }

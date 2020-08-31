@@ -1,45 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import ReactDOM from 'react-dom';
-import { configureStore } from '@reduxjs/toolkit'
-
-import store from './app/store';
+import io from 'socket.io-client';
 import { Provider } from 'react-redux';
+
+import { configureStore } from '@reduxjs/toolkit';
+import store from './app/store';
 
 import './index.css';
 
 import Console from "./features/console/Console";
 
-// const initialState = { value: 0 }
-//
-// function counterReducer(state = initialState, action) {
-//     // Check to see if the reducer cares about this action
-//     if (action.type === 'counter/increment') {
-//         // If so, make a copy of `state`
-//         return {
-//             ...state,
-//             // and update the copy with the new value
-//             value: state.value + 1
-//         }
-//     }
-//     // otherwise return the existing state unchanged
-//     return state
-// }
-
-// const store = configureStore({ reducer: counterReducer })
-//
-// console.log(store.getState())
-// store.dispatch({ type: 'counter/increment' })
-// console.log(store.getState())
-// const selectCounterValue = state => state.valued
-//
-// const currentValue = selectCounterValue(store.getState())
-// console.log(currentValue)
-
-
+const socket = io('localhost:3001');
 
 store.subscribe(()=>{
     localStorage.setItem('reduxState', JSON.stringify(store.getState()))
-})
+});
+
+function Socket() {
+    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [lastMessage, setLastMessage] = useState(null);
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            setIsConnected(true);
+        });
+        socket.on('disconnect', () => {
+            setIsConnected(false);
+        });
+        socket.on('message', data => {
+            setLastMessage(data);
+        });
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('message');
+        };
+    });
+
+    const sendMessage = () => {
+        socket.emit('hello!');
+    };
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                <p>Connected: { '' + isConnected }</p>
+                <p>Last message: { lastMessage || '-' }</p>
+                <button onClick={ sendMessage }>Say hello!</button>
+            </header>
+        </div>
+    );
+};
 
 class Terminal extends React.Component {
     constructor(props) {
@@ -54,7 +65,8 @@ class Terminal extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <Console />
+                <Socket />
+                <Console socket={socket} />
             </Provider>
 
         );

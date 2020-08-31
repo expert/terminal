@@ -4,6 +4,7 @@ import './pane.sass'
 import { paneAdded, selectPaneByTab } from "./paneSlice";
 import {useDispatch, useSelector} from "react-redux";
 
+
 export const PaneLabel = (props) => {
     return (
         <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span>{props.command}</label>
@@ -11,9 +12,11 @@ export const PaneLabel = (props) => {
 };
 export const PaneAdd = (props) => {
     const dispatch = useDispatch();
+    const socket = props.socket;
     const keyPress = (e) => {
         const value = e.target.value;
         if(e.key === 'Enter') {
+            socket.emit('vasea!');
             dispatch(
                 paneAdded({
                     command: value,
@@ -44,29 +47,10 @@ export default class Pane extends React.Component {
         this.state = {
             command: ''
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.keyPress = this.keyPress.bind(this);
     }
-    handleChange(event) {
-        this.setState({command: event.target.value});
-    }
-
-    handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.command);
-        event.preventDefault();
-    }
-    keyPress(e) {
-        console.log(e)
-        console.log(e.key)
-        if(e.key === 'Enter') {
-            this.handleSubmit(e)
-            // alert('shoudl save', this.state.command)
-        }
-    }
-
     render() {
         const tabId = this.props.tabId;
+        const socket = this.props.socket;
         return (
             <div className="pane">
                 <div className="pane__body">
@@ -76,7 +60,7 @@ export default class Pane extends React.Component {
                 {/*    <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span></label>*/}
                 {/*    <input type="text" className="pane__input" value={this.state.value} onChange={this.handleChange} onKeyPress={this.keyPress}/>*/}
                 {/*</div>*/}
-                <PaneAdd tabId={tabId}/>
+                <PaneAdd tabId={tabId} socket={socket}/>
             </div>
         );
     }

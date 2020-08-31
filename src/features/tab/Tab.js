@@ -1,5 +1,6 @@
 import React from "react";
 import {useDispatch, useSelector} from 'react-redux';
+import {nanoid} from "@reduxjs/toolkit"
 
 import './tab.sass'
 
@@ -16,11 +17,12 @@ export const TabsAdd = () => {
     const dispatch = useDispatch();
 
     const onAddTabClicked = () => {
-        const id = tabs.length + 1;
+        const idTitle = tabs.length + 1;
+        const id = nanoid();
         dispatch(
             tabAdded({
                 id,
-                title: 'Terminal ' + id,
+                title: 'Terminal ' + idTitle,
                 content: 'alexei@iMacALexeiCern %'
             })
         )
@@ -72,7 +74,7 @@ export default class Tab extends React.Component {
             <div className="tab__pane">
                 Last login Alexei: {this.state.date.toLocaleTimeString()} <br/>
                 {tab.content}
-                <Pane tabId={tab.id}/>
+                <Pane tabId={tab.id} socket={this.props.socket}/>
             </div>
         </div>;
     }
