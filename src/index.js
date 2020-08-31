@@ -1,10 +1,11 @@
 import React, { useState, useEffect }  from 'react';
 import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
-import { Provider } from 'react-redux';
-
+import {Provider, useDispatch} from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import store from './app/store';
+import {paneAdded, paneUpdate} from "./features/pane/paneSlice";
+
 
 import './index.css';
 
@@ -19,6 +20,7 @@ store.subscribe(()=>{
 function Socket() {
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [lastMessage, setLastMessage] = useState(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -29,6 +31,16 @@ function Socket() {
         });
         socket.on('message', data => {
             setLastMessage(data);
+        });
+        socket.on('command_response', data => {
+            console.log('got command from server', data);
+            const {id, body} = data;
+            dispatch(
+                paneUpdate({
+                    body,
+                    id
+                })
+            );
         });
         return () => {
             socket.off('connect');

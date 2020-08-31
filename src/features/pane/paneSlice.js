@@ -21,7 +21,8 @@ const initialState = [
         property-single-view.php
         uploads.zip
         alexei@iMacALexeiC`,
-        tabId: 0
+        tabId: 0,
+        id: 0
     },
 ];
 export const paneSlice = createSlice({
@@ -30,6 +31,11 @@ export const paneSlice = createSlice({
     reducers: {
         paneAdded(state, action) {
             state.push(action.payload)
+        },
+        paneUpdate(state, action) {
+            const {id, body} = action.payload;
+            const command = state.find(command => command.id === id);
+            command.body = body
         }
     },
 });
@@ -37,7 +43,7 @@ export const paneSlice = createSlice({
 export const selectPane = state => state.pane;
 export const selectPaneByTab = (state, tabId) => state.pane.filter(item => item.tabId === tabId);
 
-export const {paneAdded} = paneSlice.actions;
+export const {paneAdded, paneUpdate} = paneSlice.actions;
 
 export default paneSlice.reducer;
 

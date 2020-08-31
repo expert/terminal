@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {nanoid} from "@reduxjs/toolkit"
 
 import './pane.sass'
 import { paneAdded, selectPaneByTab } from "./paneSlice";
@@ -7,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 export const PaneLabel = (props) => {
     return (
-        <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span>{props.command}</label>
+        <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span> {props.command}</label>
     )
 };
 export const PaneAdd = (props) => {
@@ -16,12 +17,17 @@ export const PaneAdd = (props) => {
     const keyPress = (e) => {
         const value = e.target.value;
         if(e.key === 'Enter') {
-            socket.emit('vasea!');
+            const id = nanoid();
+            socket.emit('command', {
+                command: value,
+                id: id
+            });
             dispatch(
                 paneAdded({
                     command: value,
                     body: 'running...',
-                    tabId: props.tabId
+                    tabId: props.tabId,
+                    id: id
                 })
             );
             e.target.value = '';
@@ -36,7 +42,7 @@ export const PaneBody = (props) => {
     const pane = useSelector(state => selectPaneByTab(state, props.tabId));
     console.log('pane', pane);
     const renderedBody = pane.map((item, i) => {
-       return <div key={i}><PaneLabel command={item.command}/><br/>{item.body}<br/></div>;
+       return <div key={i}><PaneLabel command={item.command}/><pre>{item.body}</pre></div>;
     });
     return (renderedBody)
 };
