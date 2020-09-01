@@ -68,6 +68,7 @@ export const getTabsDimenssions = state => {
     state.tabs.map(item => {
         width += item.width;
         height += item.height;
+        return null
     });
     return {width, height};
 };

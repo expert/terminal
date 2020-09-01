@@ -1,14 +1,14 @@
-import React, {useState, useRef, useEffect} from "react";
-import {nanoid} from "@reduxjs/toolkit"
+import React, {useEffect, useRef} from "react";
 
 import './pane.sass'
-import { paneAdded, selectPaneByTab } from "./paneSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {selectPaneByTab} from "./paneSlice";
+import {useSelector} from "react-redux";
 
 
 export const PaneLabel = (props) => {
     return (
-        <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span> {props.command}</label>
+        <label className="pane__label">alexei@iMacALexeiCern<span
+            className="pane__label-suffix">:<i>~</i>$</span> {props.command}</label>
     )
 };
 
@@ -16,7 +16,9 @@ export const PaneBody = (props) => {
     const pane = useSelector(state => selectPaneByTab(state, props.tabId));
     const paneEl = useRef(null);
     const renderedBody = pane.map((item, i) => {
-       return <div key={i}><PaneLabel command={item.command}/><pre>{item.body}</pre></div>;
+        return <div key={i}><PaneLabel command={item.command}/>
+            <pre>{item.body}</pre>
+        </div>;
     });
     useEffect(() => {
         paneEl.current.scrollTop = paneEl.current.scrollHeight
@@ -31,8 +33,9 @@ export default class Pane extends React.Component {
             command: ''
         };
     }
+
     render() {
         const tabId = this.props.tabId;
-        return (<PaneBody tabId={tabId} />);
+        return (<PaneBody tabId={tabId}/>);
     }
 }

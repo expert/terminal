@@ -8,12 +8,20 @@ import {ReactComponent as CancelIcon} from '../../asstes/svg/cancel.svg';
 import {ReactComponent as SettingsIcon} from '../../asstes/svg/gear.svg';
 import {ReactComponent as AddIcon} from '../../asstes/svg/add.svg';
 
-import {selectTabs, tabAdded, tabRemoved, setTabActive, getTabByTab, getActiveTab, setTabActiveCommand, setTabByIdCommand, updateTabDimension, updateTabSetting} from './tabsSlice'
-import {selectPreviousCommandByTab} from '../pane/paneSlice'
+import {
+    getActiveTab,
+    getTabByTab,
+    selectTabs,
+    setTabActive,
+    setTabActiveCommand,
+    tabAdded,
+    tabRemoved,
+    updateTabDimension,
+    updateTabSetting
+} from './tabsSlice'
+import {paneAdded, selectPreviousCommandByTab} from '../pane/paneSlice'
 
-import Pane from '../pane/Pane';
-import {paneAdded} from "../pane/paneSlice";
-import { PaneLabel } from "../pane/Pane";
+import Pane, {PaneLabel} from '../pane/Pane';
 
 export const TabsAdd = (props) => {
     const tabs = useSelector(selectTabs);
@@ -21,7 +29,7 @@ export const TabsAdd = (props) => {
     let [isDropdownShow, setDropdownShow] = useState(false);
     const currentTab = useSelector(state => getTabByTab(state, props.tabId));
 
-    const onAddTab = (vertical= true) => {
+    const onAddTab = (vertical = true) => {
         const idTitle = tabs.length + 1;
         const id = nanoid();
         isDropdownShow = setDropdownShow(false);
@@ -104,17 +112,34 @@ export const TabsSettings = (props) => {
             {isDropdownShow && <div className="dropdown__box">
                 <label>
                     Background Color
-                    <input type="color" value={backgroundColor} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'backgroundColor', id: props.tabId}))}/>
+                    <input type="color" value={backgroundColor} onChange={(e) => dispatch(updateTabSetting({
+                        value: e.target.value,
+                        key: 'backgroundColor',
+                        id: props.tabId
+                    }))}/>
                 </label>
                 <label>
-                    Color <input type="color" value={color} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'color', id: props.tabId}))}/>
+                    Color <input type="color" value={color} onChange={(e) => dispatch(updateTabSetting({
+                    value: e.target.value,
+                    key: 'color',
+                    id: props.tabId
+                }))}/>
                 </label>
                 <label>
-                    Font size <input type="range" min="0" max="25" value={fontSize} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'fontSize', id: props.tabId}))}/>
+                    Font size <input type="range" min="0" max="25" value={fontSize}
+                                     onChange={(e) => dispatch(updateTabSetting({
+                                         value: e.target.value,
+                                         key: 'fontSize',
+                                         id: props.tabId
+                                     }))}/>
                 </label>
                 <label>
                     Cursor
-                    <select value={cursor} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'cursor', id: props.tabId}))}>
+                    <select value={cursor} onChange={(e) => dispatch(updateTabSetting({
+                        value: e.target.value,
+                        key: 'cursor',
+                        id: props.tabId
+                    }))}>
                         <option value="default">Default</option>
                         <option value="pointer">Pointer</option>
                         <option value="not-allowed">not-allowed</option>
@@ -136,7 +161,7 @@ export const TabItem = (props) => {
     let {command, width, height, x, y, backgroundColor, color, fontSize, cursor} = useSelector(state => getTabByTab(state, props.tabId));
     let {command: commandActive, id: tabActiveId} = useSelector(getActiveTab);
     const socket = props.socket;
-    let tabCommands = useSelector(state => selectPreviousCommandByTab(state, {tabId: tabActiveId }));
+    let tabCommands = useSelector(state => selectPreviousCommandByTab(state, {tabId: tabActiveId}));
     const tabCommandsLength = tabCommands.length;
 
     const setActive = (e) => {
@@ -148,7 +173,7 @@ export const TabItem = (props) => {
         )
     };
     const setKeyUp = (e) => {
-        if(e.key === 'Backspace') {
+        if (e.key === 'Backspace') {
             commandActive = command.slice(0, -1);
             dispatch(setTabActiveCommand(commandActive));
         } else if (e.key === 'ArrowUp') {
@@ -168,7 +193,7 @@ export const TabItem = (props) => {
             } else {
                 i = 1
             }
-        } else if(e.key === 'Enter') {
+        } else if (e.key === 'Enter') {
             const id = nanoid();
             socket.emit('command', {
                 command: commandActive,
@@ -183,7 +208,7 @@ export const TabItem = (props) => {
                 })
             );
             dispatch(setTabActiveCommand(''));
-        } else if( ['Escape', 'Tab', 'CapsLock', 'Shift', 'Control', 'Alt', 'Meta'].indexOf(e.key) === -1) {
+        } else if (['Escape', 'Tab', 'CapsLock', 'Shift', 'Control', 'Alt', 'Meta'].indexOf(e.key) === -1) {
             commandActive += e.key;
             dispatch(setTabActiveCommand(commandActive));
         }
@@ -195,7 +220,7 @@ export const TabItem = (props) => {
         onKeyUp={setKeyUp}
         tabIndex={props.isActive ? "0" : "2"}
         style={{
-            gridArea: x  + ' / ' + y + ' / span ' + height + ' / span ' + width,
+            gridArea: x + ' / ' + y + ' / span ' + height + ' / span ' + width,
             '--background-color': backgroundColor,
             '--color': color,
             '--font-size': fontSize + 'px',
@@ -204,7 +229,7 @@ export const TabItem = (props) => {
     >
         {props.children}
         <PaneLabel command={command}/>
-        <span className="tab__cursor" />
+        <span className="tab__cursor"/>
     </div>);
 };
 

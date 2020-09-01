@@ -1,20 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './console.sass'
 import Tab from "../tab/Tab";
-import { useSelector, useDispatch } from 'react-redux'
-import { selectTabs, getTabsDimenssions } from '../tab/tabsSlice'
-import store from "../../app/store";
+import {useSelector} from 'react-redux'
+import {selectTabs} from '../tab/tabsSlice'
 
 export const TabsList = (props) => {
     const tabs = useSelector(selectTabs);
-    const tabsDimenssions = useSelector(getTabsDimenssions);
     const socket = props.socket;
     const renderedTabs = tabs.map((tab, index) => (
         <Tab className={'test'} tab={tab} key={index} socket={socket}/>
     ));
-    return (<div className="console__tabs" style={{gridTemplateRows: 'repeat(4, 1fr)', gridTemplateColumns: 'repeat(12, 1fr)'}}>{renderedTabs}</div>);
-}
+    return (<div className="console__tabs" style={{
+        gridTemplateRows: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(12, 1fr)'
+    }}>{renderedTabs}</div>);
+};
 
 export default class Console extends React.Component {
     constructor(props) {
@@ -32,14 +32,13 @@ export default class Console extends React.Component {
     }
 
     render() {
-        const pane = this.state.pane;
         return <div className="console">
             <div className="console__bar">
                 <button className="console__btn console__btn--close" onClick={this.resetConsole}></button>
                 <button className="console__btn console__btn--min"></button>
                 <button className="console__btn console__btn--max"></button>
             </div>
-            <TabsList socket={this.props.socket} />
+            <TabsList socket={this.props.socket}/>
         </div>;
     }
 }

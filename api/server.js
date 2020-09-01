@@ -4,6 +4,7 @@ const mockup = require('./mockup');
 const sendResponse = (socket, id, message) => {
     const chunks = message.split('\n');
     let i = 0, sendChunks, body = '';
+
     function send() {
         if (i !== chunks.length) {
             sendChunks = setTimeout(() => {
@@ -17,6 +18,7 @@ const sendResponse = (socket, id, message) => {
             clearTimeout(sendChunks)
         }
     }
+
     send();
 };
 
