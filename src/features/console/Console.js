@@ -9,7 +9,6 @@ import store from "../../app/store";
 export const TabsList = (props) => {
     const tabs = useSelector(selectTabs);
     const tabsDimenssions = useSelector(getTabsDimenssions);
-    console.log('tabsDimenssions', tabsDimenssions);
     const socket = props.socket;
     const renderedTabs = tabs.map((tab, index) => (
         <Tab className={'test'} tab={tab} key={index} socket={socket}/>

@@ -23,7 +23,6 @@ export const tabsSlice = createSlice({
     reducers: {
         tabAdded(state, action) {
             const oldTab = state.find(tab => tab.isActive);
-            console.log('oldTab', oldTab);
             if (oldTab) oldTab.isActive = false;
             state.push(action.payload)
         },
@@ -47,7 +46,6 @@ export const tabsSlice = createSlice({
         updateTabSetting(state, action) {
             const {id, key, value} = action.payload;
             const tab = state.find(tab => tab.id === id);
-            console.log('settings', action.payload, tab);
             tab[key] = value;
         },
         setTabActiveCommand(state, action) {
@@ -57,7 +55,6 @@ export const tabsSlice = createSlice({
         setTabByIdCommand(state, action) {
             const {command, id} = action.payload;
             const activeTab = state.find(tab => tab.id === id);
-            console.log('must set command', command, id);
             activeTab.command = command
         }
     },

@@ -33,7 +33,6 @@ function Socket() {
             setLastMessage(data);
         });
         socket.on('command_response', data => {
-            console.log('got command from server', data);
             const {id, body} = data;
             dispatch(
                 paneUpdate({
