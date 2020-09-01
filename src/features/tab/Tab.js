@@ -8,7 +8,7 @@ import {ReactComponent as CancelIcon} from '../../asstes/svg/cancel.svg';
 import {ReactComponent as SettingsIcon} from '../../asstes/svg/gear.svg';
 import {ReactComponent as AddIcon} from '../../asstes/svg/add.svg';
 
-import {selectTabs, tabAdded, tabRemoved, setTabActive, getTabByTab, getActiveTab, setTabActiveCommand, setTabByIdCommand, updateTabDimension} from './tabsSlice'
+import {selectTabs, tabAdded, tabRemoved, setTabActive, getTabByTab, getActiveTab, setTabActiveCommand, setTabByIdCommand, updateTabDimension, updateTabSetting} from './tabsSlice'
 import {selectPreviousCommandByTab} from '../pane/paneSlice'
 
 import Pane from '../pane/Pane';
@@ -46,7 +46,11 @@ export const TabsAdd = (props) => {
                 width: newWidth,
                 height: newHeight,
                 x: newX,
-                y: newY
+                y: newY,
+                backgroundColor: '#000',
+                color: '#9c9ea0',
+                fontSize: 14,
+                cursor: 'default'
             })
         );
     };
@@ -78,17 +82,59 @@ export const TabsRemove = (props) => {
     };
 
     return (
-        <button className="tab__btn tab__btn--close" onClick={onRemoveTabClicked}>
+        <button className="tab__btn tab__btn--close">
             <CancelIcon className="tab__icon tab__icon--close"/>
         </button>
+    )
+};
+export const TabsSettings = (props) => {
+    const dispatch = useDispatch();
+    let [isDropdownShow, setDropdownShow] = useState(false);
+    const currentTab = useSelector(state => getTabByTab(state, props.tabId));
+    const {backgroundColor, color, fontSize, cursor} = currentTab;
+
+    const onSettingsClicked = () => {
+        isDropdownShow = setDropdownShow(!isDropdownShow);
+    };
+    return (
+        <div className="dropdown" style={{marginLeft: 'auto'}}>
+            <button className="tab__btn tab__btn--settings" onClick={onSettingsClicked}>
+                <SettingsIcon className="tab__icon tab__icon--settings"/>
+            </button>
+            {isDropdownShow && <div className="dropdown__box">
+                <label>
+                    Background Color
+                    <input type="color" value={backgroundColor} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'backgroundColor', id: props.tabId}))}/>
+                </label>
+                <label>
+                    Color <input type="color" value={color} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'color', id: props.tabId}))}/>
+                </label>
+                <label>
+                    Font size <input type="range" min="0" max="25" value={fontSize} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'fontSize', id: props.tabId}))}/>
+                </label>
+                <label>
+                    Cursor
+                    <select value={cursor} onChange={(e) => dispatch(updateTabSetting({value: e.target.value, key: 'cursor', id: props.tabId}))}>
+                        <option value="default">Default</option>
+                        <option value="pointer">Pointer</option>
+                        <option value="not-allowed">not-allowed</option>
+                        <option value="wait">wait</option>
+                        <option value="text">text</option>
+                        <option value="move">move</option>
+                        <option value="crosshair">crosshair</option>
+                    </select>
+                </label>
+
+            </div>}
+
+        </div>
     )
 };
 let i = 0;
 export const TabItem = (props) => {
     const dispatch = useDispatch();
-    let {command, width, height, x, y} = useSelector(state => getTabByTab(state, props.tabId));
+    let {command, width, height, x, y, backgroundColor, color, fontSize, cursor} = useSelector(state => getTabByTab(state, props.tabId));
     let {command: commandActive, id: tabActiveId} = useSelector(getActiveTab);
-    // let previousCommand = useSelector(state => selectPreviousCommandByTab(state, {tabId: tabActiveId, commandId:  }));
     const socket = props.socket;
     let tabCommands = useSelector(state => selectPreviousCommandByTab(state, {tabId: tabActiveId }));
     const tabCommandsLength = tabCommands.length;
@@ -104,13 +150,11 @@ export const TabItem = (props) => {
     const setKeyUp = (e) => {
         if(e.key === 'Backspace') {
             commandActive = command.slice(0, -1);
-            // dispatch(setTabByIdCommand({command, id: props.tabId}));
             dispatch(setTabActiveCommand(commandActive));
         } else if (e.key === 'ArrowUp') {
             ++i;
             const previousIndex = tabCommandsLength - i;
             if (previousIndex >= 0) {
-                // console.log('i', i, tabCommands[previousIndex]);
                 dispatch(setTabActiveCommand(tabCommands[previousIndex]));
 
             } else {
@@ -120,7 +164,6 @@ export const TabItem = (props) => {
             --i;
             const nextIndex = tabCommandsLength - i;
             if (nextIndex <= tabCommandsLength - 1) {
-                // console.log('i', i, tabCommands[nextIndex]);
                 dispatch(setTabActiveCommand(tabCommands[nextIndex]));
             } else {
                 i = 1
@@ -151,7 +194,13 @@ export const TabItem = (props) => {
         onClick={setActive}
         onKeyUp={setKeyUp}
         tabIndex={props.isActive ? "0" : "2"}
-        style={{gridArea: x  + ' / ' + y + ' / span ' + height + ' / span ' + width}}
+        style={{
+            gridArea: x  + ' / ' + y + ' / span ' + height + ' / span ' + width,
+            '--background-color': backgroundColor,
+            '--color': color,
+            '--font-size': fontSize + 'px',
+            '--cursor': cursor
+        }}
     >
         {props.children}
         <PaneLabel command={command}/>
@@ -173,9 +222,7 @@ export default class Tab extends React.Component {
             <div className={"tab__bar"}>
                 <TabsRemove id={id}/>
                 <span className='tab__title'>{title}</span>
-                <button className='tab__btn tab__btn--settings'>
-                    <SettingsIcon className='tab__icon tab__icon--settings'/>
-                </button>
+                <TabsSettings tabId={id}/>
                 <TabsAdd tabId={id}/>
             </div>
             <div className="tab__pane">

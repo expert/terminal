@@ -1,6 +1,8 @@
 .tab
-  background: #000
-  color: #9c9ea0
+  background: var(--background-color)
+  color: var(--color)
+  font-size: var(--font-size)
+  cursor: var(--cursor)
   height: 100%
   position: relative
   flex: 1
@@ -73,6 +75,8 @@
     background: #fff
     top: 100%
     right: 0
+    width: 200px
+    label,
     a
       display: block
       padding: 5px
@@ -80,3 +84,7 @@
       &:hover
         background: #10adff
         color: #fff
+    label
+      display: flex
+      justify-content: space-between
+      align-items: center
