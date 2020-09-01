@@ -42,6 +42,11 @@ export const paneSlice = createSlice({
 
 export const selectPane = state => state.pane;
 export const selectPaneByTab = (state, tabId) => state.pane.filter(item => item.tabId === tabId);
+export const selectPreviousCommandByTab = (state, {tabId}) => {
+    const commands = state.pane.filter(item => item.tabId === tabId);
+    console.log('selectPreviousCommandByTab', tabId, commands);
+    return commands.map(command => command.command);
+};
 
 export const {paneAdded, paneUpdate} = paneSlice.actions;
 

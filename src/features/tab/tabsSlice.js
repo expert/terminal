@@ -1,23 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = [
-    {id: 0, title: 'Terminal 1', content: 'Hello'},
+    {id: 0, title: 'Terminal 1', content: 'Hello', isActive: true, command: ''},
 ];
 export const tabsSlice = createSlice({
     name: 'tabs',
     initialState,
     reducers: {
         tabAdded(state, action) {
+            const oldTab =  state.find(tab => tab.isActive);
+            console.log('oldTab', oldTab);
+            if(oldTab) oldTab.isActive = false;
             state.push(action.payload)
         },
         tabRemoved(state, action) {
             state.splice(state.findIndex(tab => tab.id === action.payload), 1);
+        },
+        setTabActive(state, action) {
+            const oldTab =  state.find(tab => tab.isActive);
+            if(oldTab) oldTab.isActive = false;
+            const currentTab =  state.find(tab => tab.id === action.payload);
+            currentTab.isActive = true;
+        },
+        setTabActiveCommand(state, action) {
+            const activeTab =  state.find(tab => tab.isActive);
+            activeTab.command = action.payload
+        },
+        setTabByIdCommand(state, action) {
+            const { command, id } = action.payload;
+            const activeTab = state.find(tab => tab.id === id);
+            console.log('must set command', command, id);
+            activeTab.command = command
         }
     },
 });
 
 
 export const selectTabs = state => state.tabs;
-export const { tabAdded, tabRemoved } = tabsSlice.actions;
+export const getActiveTab = state => state.tabs.find(tab => tab.isActive);
+
+export const getTabByTab = (state, tabId) => state.tabs.find(tab => tab.id === tabId);
+
+export const { tabAdded, tabRemoved, setTabActive, setTabActiveCommand, setTabByIdCommand } = tabsSlice.actions;
 
 export default tabsSlice.reducer;

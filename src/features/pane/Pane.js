@@ -11,36 +11,39 @@ export const PaneLabel = (props) => {
         <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span> {props.command}</label>
     )
 };
-export const PaneAdd = (props) => {
-    const dispatch = useDispatch();
-    const socket = props.socket;
-    const keyPress = (e) => {
-        const value = e.target.value;
-        if(e.key === 'Enter') {
-            const id = nanoid();
-            socket.emit('command', {
-                command: value,
-                id: id
-            });
-            dispatch(
-                paneAdded({
-                    command: value,
-                    body: 'running...',
-                    tabId: props.tabId,
-                    id: id
-                })
-            );
-            e.target.value = '';
-        }
-    };
-    return (
-        <input type="text" className="pane__input" onKeyPress={keyPress}/>
-    )
-};
+// export const PaneAdd = (props) => {
+//     const dispatch = useDispatch();
+//     const socket = props.socket;
+//     const keyPress = (e) => {
+//         const value = e.target.value;
+//         if(e.key === 'Enter') {
+//             const id = nanoid();
+//             socket.emit('command', {
+//                 command: value,
+//                 id: id
+//             });
+//             dispatch(
+//                 paneAdded({
+//                     command: value,
+//                     body: 'running...',
+//                     tabId: props.tabId,
+//                     id: id
+//                 })
+//             );
+//             e.target.value = '';
+//         }
+//     };
+//     return (
+//         <input type="text" className="pane__input" onKeyPress={keyPress}/>
+//     )
+// };
+
+// export const PaneLabel = () => {
+//     return <div key={i}><PaneLabel command={item.command}/><pre>{item.body}</pre></div>
+// };
 
 export const PaneBody = (props) => {
     const pane = useSelector(state => selectPaneByTab(state, props.tabId));
-    console.log('pane', pane);
     const renderedBody = pane.map((item, i) => {
        return <div key={i}><PaneLabel command={item.command}/><pre>{item.body}</pre></div>;
     });
@@ -66,7 +69,7 @@ export default class Pane extends React.Component {
                 {/*    <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span></label>*/}
                 {/*    <input type="text" className="pane__input" value={this.state.value} onChange={this.handleChange} onKeyPress={this.keyPress}/>*/}
                 {/*</div>*/}
-                <PaneAdd tabId={tabId} socket={socket}/>
+                {/*<PaneAdd tabId={tabId} socket={socket}/>*/}
             </div>
         );
     }

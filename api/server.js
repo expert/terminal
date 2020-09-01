@@ -12,7 +12,7 @@ const sendResponse = (socket, id, message) => {
                 socket.emit('command_response', {id, body});
                 ++i;
                 send();
-            }, 300);
+            }, 50);
         } else {
             clearTimeout(sendChunks)
         }
