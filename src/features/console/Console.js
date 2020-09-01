@@ -3,15 +3,17 @@ import ReactDOM from 'react-dom';
 import './console.sass'
 import Tab from "../tab/Tab";
 import { useSelector, useDispatch } from 'react-redux'
-import { selectTabs } from '../tab/tabsSlice'
+import { selectTabs, getTabsDimenssions } from '../tab/tabsSlice'
 
 export const TabsList = (props) => {
     const tabs = useSelector(selectTabs);
+    const tabsDimenssions = useSelector(getTabsDimenssions);
+    console.log('tabsDimenssions', tabsDimenssions);
     const socket = props.socket;
     const renderedTabs = tabs.map((tab, index) => (
-        <Tab tab={tab} key={index} socket={socket}/>
+        <Tab className={'test'} tab={tab} key={index} socket={socket}/>
     ));
-    return (renderedTabs);
+    return (<div className="console__tabs" style={{gridTemplateRows: 'repeat(4, 1fr)', gridTemplateColumns: 'repeat(12, 1fr)'}}>{renderedTabs}</div>);
 }
 
 export default class Console extends React.Component {
@@ -31,9 +33,7 @@ export default class Console extends React.Component {
                 <button className="console__btn console__btn--min"></button>
                 <button className="console__btn console__btn--max"></button>
             </div>
-            <div className="console__tabs">
-                <TabsList socket={this.props.socket} />
-            </div>
+            <TabsList socket={this.props.socket} />
         </div>;
     }
 }

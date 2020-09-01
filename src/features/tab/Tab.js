@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {nanoid} from "@reduxjs/toolkit"
 
@@ -8,36 +8,63 @@ import {ReactComponent as CancelIcon} from '../../asstes/svg/cancel.svg';
 import {ReactComponent as SettingsIcon} from '../../asstes/svg/gear.svg';
 import {ReactComponent as AddIcon} from '../../asstes/svg/add.svg';
 
-import {selectTabs, tabAdded, tabRemoved, setTabActive, getTabByTab, getActiveTab, setTabActiveCommand, setTabByIdCommand} from './tabsSlice'
+import {selectTabs, tabAdded, tabRemoved, setTabActive, getTabByTab, getActiveTab, setTabActiveCommand, setTabByIdCommand, updateTabDimension} from './tabsSlice'
 import {selectPreviousCommandByTab} from '../pane/paneSlice'
 
 import Pane from '../pane/Pane';
 import {paneAdded} from "../pane/paneSlice";
 import { PaneLabel } from "../pane/Pane";
 
-export const TabsAdd = () => {
+export const TabsAdd = (props) => {
     const tabs = useSelector(selectTabs);
     const dispatch = useDispatch();
+    let [isDropdownShow, setDropdownShow] = useState(false);
+    const currentTab = useSelector(state => getTabByTab(state, props.tabId));
 
-    const onAddTabClicked = () => {
+    const onAddTab = (vertical= true) => {
         const idTitle = tabs.length + 1;
         const id = nanoid();
+        isDropdownShow = setDropdownShow(false);
+        const newWidth = vertical ? currentTab.width / 2 : currentTab.width;
+        const newHeight = vertical ? currentTab.height : currentTab.height / 2;
+        const newX = vertical ? currentTab.x : currentTab.x + newHeight;
+        const newY = vertical ? currentTab.y + newWidth : currentTab.y;
+        dispatch(updateTabDimension({
+            id: props.tabId,
+            x: currentTab.x,
+            y: currentTab.y,
+            width: newWidth,
+            height: newHeight
+        }));
         dispatch(
             tabAdded({
                 id,
                 title: 'Terminal ' + idTitle,
                 content: 'alexei@iMacALexeiCern %',
                 isActive: true,
-                command: ''
+                command: '',
+                width: newWidth,
+                height: newHeight,
+                x: newX,
+                y: newY
             })
         );
-        // document.querySelector('.tab--active').click();
+    };
+    const onAddClicked = () => {
+        isDropdownShow = setDropdownShow(!isDropdownShow);
     };
 
     return (
-        <a className="tab__btn tab__btn--add" onClick={onAddTabClicked}>
-            <AddIcon className='tab__icon tab__icon--add'/>
-        </a>
+        <div className="dropdown">
+            <a className="tab__btn tab__btn--add" onClick={onAddClicked}>
+                <AddIcon className='tab__icon tab__icon--add'/>
+            </a>
+            {isDropdownShow && <div className="dropdown__box">
+                <a onClick={() => onAddTab(true)}>Split Vertical</a>
+                <a onClick={() => onAddTab(false)}>Split Horizontal</a>
+            </div>}
+
+        </div>
     )
 
 };
@@ -59,7 +86,7 @@ export const TabsRemove = (props) => {
 let i = 0;
 export const TabItem = (props) => {
     const dispatch = useDispatch();
-    let {command} = useSelector(state => getTabByTab(state, props.tabId));
+    let {command, width, height, x, y} = useSelector(state => getTabByTab(state, props.tabId));
     let {command: commandActive, id: tabActiveId} = useSelector(getActiveTab);
     // let previousCommand = useSelector(state => selectPreviousCommandByTab(state, {tabId: tabActiveId, commandId:  }));
     const socket = props.socket;
@@ -124,6 +151,7 @@ export const TabItem = (props) => {
         onClick={setActive}
         onKeyUp={setKeyUp}
         tabIndex={props.isActive ? "0" : "2"}
+        style={{gridArea: x  + ' / ' + y + ' / span ' + height + ' / span ' + width}}
     >
         {props.children}
         <PaneLabel command={command}/>
@@ -148,7 +176,7 @@ export default class Tab extends React.Component {
                 <button className='tab__btn tab__btn--settings'>
                     <SettingsIcon className='tab__icon tab__icon--settings'/>
                 </button>
-                <TabsAdd/>
+                <TabsAdd tabId={id}/>
             </div>
             <div className="tab__pane">
                 Last login Alexei: {this.state.date.toLocaleTimeString()} <br/>
