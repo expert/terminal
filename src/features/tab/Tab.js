@@ -15,7 +15,6 @@ import {
     setTabActive,
     setTabActiveCommand,
     tabAdded,
-    tabRemoved,
     updateTabDimension,
     updateTabSetting
 } from './tabsSlice'
@@ -68,12 +67,12 @@ export const TabsAdd = (props) => {
 
     return (
         <div className="dropdown">
-            <a className="tab__btn tab__btn--add" onClick={onAddClicked}>
+            <button className="tab__btn tab__btn--add" onClick={onAddClicked}>
                 <AddIcon className='tab__icon tab__icon--add'/>
-            </a>
+            </button>
             {isDropdownShow && <div className="dropdown__box">
-                <a onClick={() => onAddTab(true)}>Split Vertical</a>
-                <a onClick={() => onAddTab(false)}>Split Horizontal</a>
+                <button onClick={() => onAddTab(true)}>Split Vertical</button>
+                <button onClick={() => onAddTab(false)}>Split Horizontal</button>
             </div>}
 
         </div>
@@ -81,13 +80,13 @@ export const TabsAdd = (props) => {
 
 };
 export const TabsRemove = (props) => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
-    const onRemoveTabClicked = (e) => {
-        dispatch(
-            tabRemoved(props.id)
-        )
-    };
+    // const onRemoveTabClicked = (e) => {
+    //     dispatch(
+    //         tabRemoved(props.id)
+    //     )
+    // };
 
     return (
         <button className="tab__btn tab__btn--close">
