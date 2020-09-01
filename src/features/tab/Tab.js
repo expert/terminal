@@ -40,7 +40,7 @@ export const TabsAdd = (props) => {
             tabAdded({
                 id,
                 title: 'Terminal ' + idTitle,
-                content: 'alexei@iMacALexeiCern %',
+                content: '',
                 isActive: true,
                 command: '',
                 width: newWidth,
@@ -179,7 +179,6 @@ export default class Tab extends React.Component {
                 <TabsAdd tabId={id}/>
             </div>
             <div className="tab__pane">
-                Last login Alexei: {this.state.date.toLocaleTimeString()} <br/>
                 {content}
                 <Pane tabId={id} socket={this.props.socket}/>
             </div>

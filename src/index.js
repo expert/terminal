@@ -53,15 +53,7 @@ function Socket() {
         socket.emit('hello!');
     };
 
-    return (
-        <div className="App">
-            <header className="App-header">
-                <p>Connected: { '' + isConnected }</p>
-                <p>Last message: { lastMessage || '-' }</p>
-                <button onClick={ sendMessage }>Say hello!</button>
-            </header>
-        </div>
-    );
+    return null;
 };
 
 class Terminal extends React.Component {

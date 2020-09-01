@@ -1,13 +1,23 @@
 module.exports =  {
     'cd' : '/////',
-    ls: 'Applications\n        ' +
-        'Applications (Parallels)\n        ' +
-        'Desktop\n        ' +
-        'Documents\n        ' +
+    ls: 'Applications\n' +
+        'Applications (Parallels)\n' +
+        'Desktop\n' +
+        'Documents\n' +
         'Downloads\n' +
-        '' +
         'Library\n' +
-        'Movies\n        Music\n        Parallels\n        Pictures\n        Public\n        avada.zip\n        jetbrains-reset-trial-evaluation-mac\n        plugins.zip\n        projects\n        property-single-view.php\n        uploads.zip\n        alexei@iMacALexeiC',
+        'Movies\n' +
+        'Music\n' +
+        'Parallels\n' +
+        'Pictures\n' +
+        'Public\n' +
+        'avada.zip\n' +
+        'jetbrains-reset-trial-evaluation-mac\n' +
+        'plugins.zip\n' +
+        'projects\n' +
+        'property-single-view.php\n' +
+        'uploads.zip\n' +
+        'alexei@iMacALexeiC',
     'sudo apt-get update': '2017-08-21 11:44:41 status installed man-db:amd64 2.6.7.1-1ubuntu1\n' +
         '2017-08-21 11:44:41 status installed doc-base:all 0.10.5\n' +
         '2017-08-21 11:44:41 status installed install-info:amd64 5.2.0.dfsg.1-2\n' +

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {nanoid} from "@reduxjs/toolkit"
 
 import './pane.sass'
@@ -44,10 +44,18 @@ export const PaneLabel = (props) => {
 
 export const PaneBody = (props) => {
     const pane = useSelector(state => selectPaneByTab(state, props.tabId));
+    const paneEl = useRef(null);
     const renderedBody = pane.map((item, i) => {
        return <div key={i}><PaneLabel command={item.command}/><pre>{item.body}</pre></div>;
     });
-    return (renderedBody)
+    useEffect(() => {
+        // Update the document title using the browser API
+        document.title = `You clicked 2 times`;
+        console.log('PaneBody', paneEl.current, paneEl.current.offsetHeight);
+        paneEl.current.scrollTop = paneEl.current.scrollHeight
+    });
+    // if(paneEl) paneEl.current.scrollTop(1000);
+    return (<div className="pane" ref={paneEl}>{renderedBody}</div>)
 };
 
 export default class Pane extends React.Component {
@@ -60,17 +68,6 @@ export default class Pane extends React.Component {
     render() {
         const tabId = this.props.tabId;
         const socket = this.props.socket;
-        return (
-            <div className="pane">
-                <div className="pane__body">
-                    <PaneBody tabId={tabId} />
-                </div>
-                {/*<div className="pane__toolbar">*/}
-                {/*    <label className="pane__label">alexei@iMacALexeiCern<span className="pane__label-suffix">:<i>~</i>$</span></label>*/}
-                {/*    <input type="text" className="pane__input" value={this.state.value} onChange={this.handleChange} onKeyPress={this.keyPress}/>*/}
-                {/*</div>*/}
-                {/*<PaneAdd tabId={tabId} socket={socket}/>*/}
-            </div>
-        );
+        return (<PaneBody tabId={tabId} />);
     }
 }
