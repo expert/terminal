@@ -4,6 +4,7 @@ import './console.sass'
 import Tab from "../tab/Tab";
 import { useSelector, useDispatch } from 'react-redux'
 import { selectTabs, getTabsDimenssions } from '../tab/tabsSlice'
+import store from "../../app/store";
 
 export const TabsList = (props) => {
     const tabs = useSelector(selectTabs);
@@ -23,13 +24,19 @@ export default class Console extends React.Component {
             date: new Date(),
             pane: 0
         };
+        this.resetConsole = this.resetConsole.bind(this);
+    }
+
+    resetConsole() {
+        localStorage.setItem('reduxState', '');
+        document.location.reload();
     }
 
     render() {
         const pane = this.state.pane;
         return <div className="console">
             <div className="console__bar">
-                <button className="console__btn console__btn--close"></button>
+                <button className="console__btn console__btn--close" onClick={this.resetConsole}></button>
                 <button className="console__btn console__btn--min"></button>
                 <button className="console__btn console__btn--max"></button>
             </div>
