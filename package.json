@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "terminal",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,12 +7,20 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
     "socket.io": "^2.3.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "babel": {
+    "presets": [ "react", "env", "stage-2" ]
   },
   "scripts": {
     "start": "react-scripts start",
