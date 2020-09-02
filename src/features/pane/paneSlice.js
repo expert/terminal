@@ -1,29 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = [
-    {
-        command: 'ls',
-        body: `Applications
-        Applications (Parallels)
-        Desktop
-        Documents
-        Downloads
-        Library
-        Movies
-        Music
-        Parallels
-        Pictures
-        Public
-        avada.zip
-        jetbrains-reset-trial-evaluation-mac
-        plugins.zip
-        projects
-        property-single-view.php
-        uploads.zip
-        alexei@iMacALexeiC`,
-        tabId: 0,
-        id: 0
-    },
+    // {
+    //     command: '',
+    //     body: ``,
+    //     tabId: 0,
+    //     id: 0
+    // },
 ];
 export const paneSlice = createSlice({
     name: 'pane',
